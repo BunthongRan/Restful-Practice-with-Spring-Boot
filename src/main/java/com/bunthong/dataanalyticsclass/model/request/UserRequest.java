@@ -1,17 +1,16 @@
-package com.bunthong.dataanalyticsclass.model;
+package com.bunthong.dataanalyticsclass.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-//STEP 1
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+
 @Accessors(chain = true)
-public class User {
-    private int id;
+public class UserRequest {
     private String username;
     private String gender;
     private String address;

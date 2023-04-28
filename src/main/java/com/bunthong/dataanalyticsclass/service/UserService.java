@@ -2,6 +2,7 @@ package com.bunthong.dataanalyticsclass.service;
 
 import com.bunthong.dataanalyticsclass.model.User;
 import com.bunthong.dataanalyticsclass.model.UserAccount;
+import com.bunthong.dataanalyticsclass.model.request.UserRequest;
 
 import java.util.List;
 
@@ -11,8 +12,8 @@ public interface UserService {
     List<User> findUserByName();
     User findUserByID(int id);
 
-    int createNewUser(User user);
-    int updateUser(User user);
+    int createNewUser(UserRequest user);
+    int updateUser(UserRequest user,int id);
     int removeUser(int id);
 
 

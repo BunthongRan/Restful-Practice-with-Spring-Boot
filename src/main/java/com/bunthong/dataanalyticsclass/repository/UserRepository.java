@@ -2,6 +2,7 @@ package com.bunthong.dataanalyticsclass.repository;
 import com.bunthong.dataanalyticsclass.model.Account;
 import com.bunthong.dataanalyticsclass.model.User;
 import com.bunthong.dataanalyticsclass.model.UserAccount;
+import com.bunthong.dataanalyticsclass.model.request.UserRequest;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -21,9 +22,13 @@ public interface UserRepository {
     @Result(column = "id", property = "id")
     @Insert("insert into users_tb(username, gender, address)\n" +
             "values (#{user.username}, #{user.gender},#{user.address})")
-    int createNewUser(@Param("user") User user);
-    int updateUser(User user);
+    int createNewUser(@Param("user") UserRequest user);
+    @Update("update users_tb set username = (#{user.username},\n " +
+            " gender = #{user.gender},\n" +
+            " address = #{user.address}) where id ='1'")
+    int updateUser(UserRequest user, @Param("id") int id);
 
+    @Select("select * from users_tb where id = #{id}")
     User findUserByID(int id);
     int removeUser(int id);
 
@@ -48,5 +53,8 @@ public interface UserRepository {
     @Select("select * from useraccount_tb\n" +
             "  inner join account_tb a on a.id = useraccount_tb.account_id\n" +
             "          where user_id = #{id};")
+
+
+
     List<Account> findAccountByUserID(int id);
 }

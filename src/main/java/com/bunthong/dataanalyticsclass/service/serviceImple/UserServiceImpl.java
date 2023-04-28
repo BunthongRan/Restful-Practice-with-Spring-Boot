@@ -2,8 +2,10 @@ package com.bunthong.dataanalyticsclass.service.serviceImple;
 
 import com.bunthong.dataanalyticsclass.model.User;
 import com.bunthong.dataanalyticsclass.model.UserAccount;
+import com.bunthong.dataanalyticsclass.model.request.UserRequest;
 import com.bunthong.dataanalyticsclass.repository.UserRepository;
 import com.bunthong.dataanalyticsclass.service.UserService;
+import org.apache.coyote.Request;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,17 +33,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByID(int id) {
-        return null;
+
+        return userRepository.findUserByID(id);
     }
 
     @Override
-    public int createNewUser(User user) {
-        return userRepository.createNewUser(user);
+    public int createNewUser(UserRequest request) {
+        return userRepository.createNewUser(request);
     }
 
     @Override
-    public int updateUser(User user) {
-        return 0;
+    public int updateUser(UserRequest user,int id) {
+        return userRepository.updateUser(user,id);
     }
 
     @Override

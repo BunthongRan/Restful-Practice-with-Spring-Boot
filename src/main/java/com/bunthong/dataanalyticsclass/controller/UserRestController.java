@@ -2,6 +2,7 @@ package com.bunthong.dataanalyticsclass.controller;
 
 import com.bunthong.dataanalyticsclass.model.User;
 import com.bunthong.dataanalyticsclass.model.UserAccount;
+import com.bunthong.dataanalyticsclass.model.request.UserRequest;
 import com.bunthong.dataanalyticsclass.service.UserService;
 import com.bunthong.dataanalyticsclass.utils.Response;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,7 @@ import java.util.List;
 public class UserRestController {
 
     //inject userService
-
     private final UserService userService;
-
     public UserRestController(UserService userService) {
         this.userService = userService;
     }
@@ -26,26 +25,43 @@ public class UserRestController {
         return userService.allUser();
     }
 
-    @GetMapping("/find-id")
-    List<User> getUserbyId(){
-        return userService.findUserByName();
-    }
-
-
-    @PostMapping("/new-user")
-    public String createUser(@RequestBody User user){
-        try{
-            int affectRow = userService.createNewUser(user);
-            if(affectRow>0)
-                return "Create user successfully!";
+    @GetMapping("/{id}")
+    public Response<User> findUserByID(@PathVariable int id)
+    {
+        try {
+            User response = userService.findUserByID(id);
+            if(response!=null)
+            {
+                return Response.<User>ok().setPayload(response).setSuccess(true).setMessage(id+"is here...!");
+            }
             else
-                return "Cannot create a new user!!";
-        } catch (Exception exception){
-            return exception.getMessage();
+            {
+                return Response.<User>notFound().setMessage(id+" not existed!").setSuccess(false);
+            }
+
+        }catch (Exception e)
+        {
+            return Response.<User>exception().setMessage(id+" not existed!");
         }
 
     }
 
+
+    @PostMapping("/new-user")
+    public Response<User> createUser(@RequestBody UserRequest request){
+        try {
+            int affectedRow = userService.createNewUser(request);
+            if(affectedRow > 0){
+                User response = new User().setUsername(request.getUsername()).setAddress(request.getAddress()).setGender(request.getGender());
+                return Response.<User>ok().setPayload(response).setMessage("User was created!");
+            }else{
+                return Response.<User>badRequest().setMessage("Bad Request failed!");
+            }
+
+        }catch (Exception exception){
+            return Response.<User>exception().setMessage("Exception occurs! failed to create a new user ").setSuccess(false);
+        }
+    }
 
     @GetMapping("/user-accounts")
     public Response<List<UserAccount>> getAllUserAccounts(){
@@ -56,6 +72,23 @@ public class UserRestController {
         }catch (Exception exception){
             System.out.println("Error getting all account of user : "+ exception.getMessage());
             return Response.<List<UserAccount>>exception().setMessage("Exception occurs ! Failed to retrieved all user accounts! ").setSuccess(false);
+        }
+    }
+
+    // method for update the user
+    @PutMapping ("/{id}")
+    public Response<User> updateUserByID (@PathVariable("id") int id, @RequestBody UserRequest request){
+        try {
+            int result= userService.updateUser(request,id);
+            if(result>0) {
+                User response = new User().setId(id).setUsername(request.getUsername()).setGender(request.getGender()).setAddress(request.getAddress());
+                return Response.<User>updateSuccess().setPayload(response).setMessage("update successfully.");
+            }else {
+                return Response.<User>ok().setMessage("user with "+id+" not found").setSuccess(false);
+            }
+        }catch (Exception e){
+            System.out.println("error:"+e);
+            return Response.<User>exception().setMessage("Update Fail.").setSuccess(false);
         }
     }
 

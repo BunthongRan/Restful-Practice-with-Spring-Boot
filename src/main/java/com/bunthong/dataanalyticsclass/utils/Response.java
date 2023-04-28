@@ -3,6 +3,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.apache.ibatis.executor.statement.StatementUtil;
+
+import java.util.ResourceBundle;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +23,7 @@ public class Response<T> {
     private boolean success = false;
     private  Object metadata;
     private Status status;
+    private Status badRequest;
 
 // create the method
 
@@ -29,6 +34,12 @@ public class Response<T> {
         return response;
     }
 
+    public static <T> Response <T> badRequest(){
+        Response<T> response = new Response<>();
+        response.setBadRequest(Status.BAD_REQUEST);
+        response.setSuccess(false);
+        return response;
+    }
     public static <T> Response <T> createSuccess(){
         Response<T> response = new Response<>();
         response.setStatus(Status.CREATE_SUCCESS);
