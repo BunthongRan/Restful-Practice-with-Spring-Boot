@@ -30,6 +30,8 @@ public interface UserRepository {
 
     @Select("select * from users_tb where id = #{id}")
     User findUserByID(int id);
+
+    @Delete("Delete from users_tb where id = #{id}")
     int removeUser(int id);
 
 
