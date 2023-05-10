@@ -5,10 +5,15 @@ import com.bunthong.dataanalyticsclass.model.UserAccount;
 import com.bunthong.dataanalyticsclass.model.request.UserRequest;
 import com.bunthong.dataanalyticsclass.service.UserService;
 import com.bunthong.dataanalyticsclass.utils.Response;
+import com.github.pagehelper.PageInfo;
 import jakarta.validation.Valid;
+import org.mapstruct.ap.shaded.freemarker.core.ReturnInstruction;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.bunthong.dataanalyticsclass.utils.Response.ok;
+
 @RestController
 @RequestMapping("/user")
 //STEP 4
@@ -21,9 +26,13 @@ public class UserRestController {
     }
 
     @GetMapping("/all-users")
-    List<User> getAllUser()
-    {
-        return userService.allUser();
+    public Response<PageInfo<User>> getAllUser(@RequestParam (defaultValue = "1") int page, @RequestParam(defaultValue = "5")int size, @RequestParam (defaultValue = "") String username){
+        try{
+            PageInfo<User> response = userService.allUser(page, size, username);
+           return Response.<PageInfo<User>>ok().setPayload(response).setMessage("Successfully retrieved all users !");
+        }catch (Exception exception){
+            return Response.<PageInfo<User>>exception().setMessage("Failed to retrieved the users ! Exception occurred !");
+        }
     }
 
     @GetMapping("/{id}")

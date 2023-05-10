@@ -3,6 +3,7 @@ import com.bunthong.dataanalyticsclass.model.Account;
 import com.bunthong.dataanalyticsclass.model.User;
 import com.bunthong.dataanalyticsclass.model.UserAccount;
 import com.bunthong.dataanalyticsclass.model.request.UserRequest;
+import com.bunthong.dataanalyticsclass.repository.provider.UserProvider;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -12,8 +13,9 @@ import java.util.List;
 @Repository
 public interface UserRepository {
     @Result(column = "id", property = "id")
-    @Select("Select * from users_tb")
-    List<User> allUsers();
+//    @Select("Select * from users_tb")
+    @SelectProvider(type = UserProvider.class, method = "getAllUsers")
+    List<User> allUsers(String filterName);
 
     @Result(column = "id", property = "id")
     @Select("select * from users_tb where id = 1")

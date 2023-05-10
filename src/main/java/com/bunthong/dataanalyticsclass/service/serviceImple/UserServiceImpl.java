@@ -5,6 +5,8 @@ import com.bunthong.dataanalyticsclass.model.UserAccount;
 import com.bunthong.dataanalyticsclass.model.request.UserRequest;
 import com.bunthong.dataanalyticsclass.repository.UserRepository;
 import com.bunthong.dataanalyticsclass.service.UserService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.coyote.Request;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +24,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> allUser() {
-        return userRepository.allUsers();
+    public PageInfo<User> allUser(int page, int size, String filterName) {
+        // PageHelper
+        PageHelper.startPage(page, size);
+        return new PageInfo<>(userRepository.allUsers(filterName));
+//        return userRepository.allUsers();
     }
 
     @Override
